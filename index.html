@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="tr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Akıllı tahta için kadim kelimeler tabu turnuvası: 96 eski kelime, takımlar, süre, puan, final.">
+<meta property="og:title" content="Kadim Kelimeler Tabu">
+<meta property="og:description" content="Unutulmaya yüz tutmuş kelimeleri yasak kelimeleri söylemeden anlatın. Sınıf için tabu turnuvası.">
+<meta name="theme-color" content="#e9e6df">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.8 2.8h3.9v3.9L21.5 12l-2.8 2.8v3.9h-3.9L12 21.5l-2.8-2.8H5.3v-3.9L2.5 12l2.8-2.8V5.3h3.9z' fill='%23f1e4d8' stroke='%239a4a1e' stroke-width='1.5'/%3E%3C/svg%3E">
+<title>Kadim Kelimeler Tabu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700;800&family=Noto+Sans+Old+Turkic&display=swap">
+<style>
+/* Layout: Orhun taşı, modern ve sade. Kireçtaşı zemin (ince doku), bazalt mürekkep, bakır vurgu.
+   Oyun kartı bir yazıt taşı gibi: üstte takım rengi şerit, solda dev kelime, sağda oyma yasak satırları.
+   Tek ve açık tema: akıllı tahtada aydınlık sınıf için. */
+:root {
+  color-scheme: light;
+  --bg: #e9e6df;
+  --surface: #f8f7f3;
+  --panel: #f0ede6;
+  --sunken: #e3dfd6;
+  --ink: #1b1d20;
+  --ink-2: #2d3035;
+  --muted: #67625a;
+  --line: #d3cec4;
+  --copper: #9a4a1e;
+  --copper-soft: #f1e4d8;
+  --ok: #23724a;
+  --ok-soft: #dcefe3;
+  --bad: #b2271d;
+  --bad-soft: #f8e2df;
+  --gold: #a2720e;
+  --gold-soft: #f5ead0;
+  --on-strong: #ffffff;
+  --shadow: 0 1px 2px rgba(40, 32, 20, .08), 0 14px 36px rgba(40, 32, 20, .09);
+  --carved: inset 0 2px 3px rgba(40, 32, 20, .12), inset 0 -1px 0 rgba(255, 255, 255, .75);
+  --backdrop: rgba(27, 29, 32, .55);
+  --display: "Big Shoulders Display", "Big Shoulders", "Bahnschrift Condensed", "Arial Narrow", sans-serif;
+  --ui: "Archivo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --rune: "Noto Sans Old Turkic", "Segoe UI Historic", sans-serif;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .28 0 0 0 0 .22 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: var(--grain);
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3, p { margin: 0; }
+h1, h2 { text-wrap: balance; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+button:disabled { cursor: not-allowed; opacity: .4; }
+:focus-visible { outline: 3px solid var(--copper); outline-offset: 2px; }
+[tabindex="-1"]:focus { outline: none; }
+table { font-size: inherit; color: inherit; }
+
+.app { min-height: 100%; max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+main { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 0; }
+.view { min-height: 0; padding-block: clamp(18px, 3vh, 40px); }
+.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--copper); }
+.runes { font-family: var(--rune); color: var(--copper); opacity: .6; letter-spacing: .3em; white-space: nowrap; overflow: hidden; font-size: 1.15rem; line-height: 1.6; user-select: none; }
+
+/* Takım rozeti */
+.badge { --s: 36px; width: var(--s); height: var(--s); flex: none; display: inline-grid; place-items: center; border-radius: 30%; background: var(--tc); color: #fff; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .18); }
+.badge svg { width: 58%; height: 58%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.badge-sm { --s: 28px; }
+.badge-lg { --s: clamp(72px, 12vh, 112px); }
+.badge-xl { --s: clamp(96px, 16vh, 150px); }
+
+/* Butonlar */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; line-height: 1.2; transition: background-color .15s, border-color .15s, transform .1s; }
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn-primary { background: var(--ink); border-color: var(--ink); color: var(--on-strong); font-size: 1.1rem; padding: 14px 28px; }
+.btn-primary:hover:not(:disabled) { background: var(--ink-2); border-color: var(--ink-2); }
+.btn-lg { font-size: 1.35rem; padding: 18px 48px; border-radius: 14px; }
+.btn-block { width: 100%; }
+.btn-quiet { background: transparent; border-color: transparent; color: var(--muted); padding: 8px 12px; }
+.btn-quiet:hover:not(:disabled) { background: rgba(40, 32, 20, .06); border-color: transparent; color: var(--ink); }
+.btn.armed { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.icon-btn { width: 40px; height: 40px; flex: none; display: inline-grid; place-items: center; border-radius: 10px; border: 1px solid transparent; background: transparent; color: var(--muted); font-size: 1.4rem; line-height: 1; }
+.icon-btn:hover:not(:disabled) { background: rgba(40, 32, 20, .06); color: var(--ink); }
+
+.chip { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.chip-ok { background: var(--ok-soft); color: var(--ok); }
+.chip-bad { background: var(--bad-soft); color: var(--bad); }
+.chip-gold { background: var(--gold-soft); color: var(--gold); }
+.chip-muted { background: var(--sunken); color: var(--muted); }
+.chip-copper { background: var(--copper-soft); color: var(--copper); }
+
+/* Üst şerit */
+.bar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.45rem; letter-spacing: .02em; text-transform: uppercase; line-height: 1; }
+.brand svg { width: 28px; height: 28px; fill: var(--copper-soft); stroke: var(--copper); stroke-width: 1.5; stroke-linejoin: round; }
+.stage-pill { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--copper); background: var(--copper-soft); padding: 5px 12px; border-radius: 999px; }
+.bar-actions { margin-left: auto; display: flex; flex-wrap: wrap; gap: 2px; }
+
+/* Yazıt kartı */
+.card { --tc: var(--copper); position: relative; display: grid; min-height: 0; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: 26px 26px 18px 18px; box-shadow: var(--shadow); }
+.card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 7px; background: var(--tc); z-index: 1; }
+.card-main { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: clamp(8px, 1.4vh, 16px); padding: clamp(24px, 4vh, 56px) clamp(20px, 3vw, 52px); min-width: 0; }
+.origin { font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); }
+.word { font-family: var(--display); font-weight: 900; line-height: .95; letter-spacing: .01em; font-size: clamp(3.4rem, min(10vw, 17vh), 12rem); white-space: nowrap; max-width: 100%; text-shadow: 0 2px 0 rgba(255, 255, 255, .9); }
+.meaning { color: var(--muted); font-size: clamp(1.05rem, min(1.7vw, 3vh), 1.9rem); max-width: 30ch; }
+.card-taboo { display: flex; flex-direction: column; justify-content: center; gap: clamp(8px, 1.2vh, 12px); padding: clamp(18px, 2.8vh, 36px) clamp(18px, 2.6vw, 40px); background: var(--panel); border-top: 1px solid var(--line); min-width: 0; }
+.taboo-head { display: flex; align-items: center; gap: 12px; font-size: .74rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--bad); }
+.taboo-head::before, .taboo-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.taboo { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(6px, .9vh, 9px); }
+.taboo li { text-align: center; font-weight: 700; font-size: clamp(1.2rem, min(2.4vw, 4vh), 2.7rem); line-height: 1.2; padding: clamp(6px, 1.1vh, 12px) 14px; background: var(--sunken); border-radius: 12px; box-shadow: var(--carved); overflow-wrap: anywhere; }
+.cover { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 24px; background: var(--surface); }
+.cover strong { font-family: var(--display); font-weight: 900; font-size: clamp(2.6rem, 6vw, 4.6rem); text-transform: uppercase; line-height: 1; }
+.cover span { color: var(--muted); }
+
+/* Kart animasyonları */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+@keyframes riseBig { from { opacity: 0; transform: translateY(26px) scale(.96); } }
+@keyframes shake { 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+@keyframes glowOk { from { box-shadow: 0 0 0 8px var(--ok), var(--shadow); } }
+@keyframes glowBad { from { box-shadow: 0 0 0 8px var(--bad), var(--shadow); } }
+@keyframes floatUp { 0% { opacity: 0; transform: translateY(8px) scale(.7); } 20% { opacity: 1; transform: translateY(0) scale(1.15); } 100% { opacity: 0; transform: translateY(-46px) scale(1); } }
+@keyframes bump { 40% { transform: scale(1.35); } }
+@keyframes pop { from { opacity: 0; transform: scale(1.8); } 60% { opacity: 1; transform: scale(.94); } }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+@keyframes badgeIn { from { opacity: 0; transform: scale(.4) rotate(-20deg); } 70% { transform: scale(1.08) rotate(3deg); } }
+.card.enter .origin, .card.enter .meaning { animation: rise .35s ease-out both; }
+.card.enter .word { animation: riseBig .4s cubic-bezier(.2, .8, .2, 1) both; }
+.card.enter .taboo li { animation: rise .35s ease-out both; animation-delay: calc(var(--i) * 45ms + 60ms); }
+.card.hit-ok { animation: glowOk .5s ease-out; }
+.card.hit-tabu { animation: glowBad .5s ease-out, shake .35s ease-in-out; }
+
+/* Kurulum */
+.setup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 540px); gap: clamp(24px, 4vw, 64px); align-items: start; }
+.intro { display: grid; gap: 20px; align-content: start; min-width: 0; }
+.intro h1 { font-family: var(--display); font-weight: 900; font-size: clamp(3.4rem, 7.4vw, 6.6rem); line-height: .9; text-transform: uppercase; letter-spacing: .005em; }
+.intro h1 span { display: block; color: var(--copper); }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 48ch; }
+.rune-block { display: grid; gap: 2px; max-width: 560px; }
+.rune-cap { font-size: .78rem; color: var(--muted); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fact { font-size: .9rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.fact b { font-variant-numeric: tabular-nums; }
+.sample-block { display: grid; gap: 10px; max-width: 560px; }
+.sample-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sample .word { font-size: clamp(3rem, 6vw, 4.4rem); }
+.sample .meaning { font-size: 1.05rem; }
+.sample .card-main { padding: 30px 24px 22px; }
+.sample .card-taboo { padding: 16px 20px 20px; }
+.sample .taboo li { font-size: 1.05rem; padding: 6px 12px; }
+.form { display: grid; gap: 24px; padding: clamp(20px, 2.4vw, 32px); background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+.form-section { display: grid; gap: 12px; }
+.form-section h2 { font-size: 1rem; font-weight: 800; display: flex; align-items: baseline; gap: 8px; }
+.form-section h2 span { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.form-hint { font-size: .85rem; color: var(--muted); }
+.teams { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.team-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px; align-items: center; gap: 8px; }
+.badge-btn { padding: 0; border: 0; background: none; border-radius: 30%; display: grid; place-items: center; }
+.badge-btn .badge { --s: 44px; transition: transform .15s; }
+.badge-btn:hover .badge { transform: rotate(-6deg) scale(1.05); }
+.input { width: 100%; min-width: 0; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.input:hover { border-color: var(--muted); }
+.fields { display: grid; }
+.field { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; padding-block: 12px; border-top: 1px solid var(--line); }
+.field:first-child { border-top: 0; padding-top: 0; }
+.field-label { font-weight: 600; }
+.field-label small { display: block; font-size: .85rem; font-weight: 500; color: var(--muted); }
+.seg { position: relative; display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 12px; background: var(--sunken); box-shadow: var(--carved); }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.seg label { min-width: 52px; padding: 8px 14px; border-radius: 9px; text-align: center; font-weight: 600; color: var(--muted); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg label:hover { color: var(--ink); }
+.seg input:checked + label { background: var(--ink); color: var(--on-strong); }
+.seg input:focus-visible + label { outline: 3px solid var(--copper); outline-offset: 1px; }
+.plan-note { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; background: var(--copper-soft); font-size: .95rem; }
+.plan-note span { color: var(--muted); }
+
+/* Sıradaki takım */
+.ready { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: clamp(12px, 2.2vh, 22px); }
+.ready .badge-lg { animation: badgeIn .6s cubic-bezier(.2, .8, .2, 1) both; }
+.ready-name { font-family: var(--display); font-weight: 900; font-size: clamp(3.4rem, min(10vw, 16vh), 8rem); line-height: .9; text-transform: uppercase; overflow-wrap: anywhere; animation: riseBig .5s .1s cubic-bezier(.2, .8, .2, 1) both; }
+.cues { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cues li { padding: 7px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 500; }
+.rule-note { color: var(--copper); font-weight: 700; }
+.ready .board-card { max-width: 620px; }
+
+/* Oyun */
+.play { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; gap: clamp(12px, 2vh, 20px); }
+.play-top { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; }
+.turn-info { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.turn-info .badge { --s: clamp(48px, 7vh, 64px); }
+.turn-team { font-family: var(--display); font-weight: 900; font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: .95; text-transform: uppercase; overflow-wrap: anywhere; }
+.turn-score { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.turn-pts { font-family: var(--display); font-size: 2rem; font-weight: 900; line-height: 1; min-width: 1.6ch; }
+.turn-pts.bump { animation: bump .35s ease-out; }
+.float { position: absolute; left: 0; top: -10px; font-family: var(--display); font-weight: 900; font-size: 2.6rem; line-height: 1; pointer-events: none; opacity: 0; }
+.float.on { animation: floatUp .8s ease-out; }
+.float.f-ok { color: var(--ok); } .float.f-tabu { color: var(--bad); } .float.f-pas { color: var(--muted); }
+.clock { position: relative; width: clamp(96px, min(10vw, 16vh), 144px); height: clamp(96px, min(10vw, 16vh), 144px); border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); }
+.clock svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.clock .track { fill: none; stroke: var(--sunken); stroke-width: 9; }
+.clock .arc { fill: none; stroke: var(--copper); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset .1s linear; }
+.clock.low { animation: pulse 1s ease-in-out infinite; }
+.clock.low .arc { stroke: var(--bad); }
+.clock-num { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.clock-num b { font-family: var(--display); font-size: clamp(2.4rem, min(4vw, 6vh), 3.6rem); font-weight: 900; line-height: .9; font-variant-numeric: tabular-nums; }
+.clock.low .clock-num b { color: var(--bad); }
+.clock-num span { font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.tools { justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.actions { display: grid; grid-template-columns: 1fr .8fr 1.25fr; gap: clamp(10px, 1.4vw, 16px); }
+.act { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: clamp(14px, 2.4vh, 26px) 16px; border-radius: 16px; border: 1px solid transparent; font-weight: 700; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .18); transition: transform .08s, box-shadow .08s; }
+.act:active:not(:disabled) { transform: translateY(3px); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .18); }
+.act-label { font-family: var(--display); font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
+.act-sub { font-size: clamp(.8rem, 1vw, .95rem); font-weight: 500; opacity: .85; }
+.act-ok { background: var(--ok); color: var(--on-strong); }
+.act-bad { background: var(--bad); color: var(--on-strong); }
+.act-pass { background: var(--surface); border-color: var(--line); color: var(--ink); box-shadow: inset 0 -4px 0 var(--sunken); }
+
+/* Tam ekran katman: geri sayım ve süre bitti */
+.overlay { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; background-color: var(--bg); background-image: var(--grain); }
+.overlay .badge-xl { animation: badgeIn .5s cubic-bezier(.2, .8, .2, 1) both; }
+.ov-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.6rem); text-transform: uppercase; letter-spacing: .02em; color: var(--muted); }
+.ov-big { font-family: var(--display); font-weight: 900; font-size: clamp(7rem, min(26vw, 40vh), 20rem); line-height: .85; color: var(--ink); text-transform: uppercase; }
+.ov-big.small { font-size: clamp(4rem, min(14vw, 22vh), 11rem); }
+.ov-big.pop { animation: pop .55s cubic-bezier(.2, .8, .2, 1) both; }
+.ov-big.go { color: var(--ok); }
+.ov-big.bad { color: var(--bad); }
+canvas.confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+
+/* Tur özeti, sonuçlar */
+.summary { display: grid; gap: 22px; align-content: start; }
+.sum-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+.sum-title { display: grid; gap: 8px; }
+.sum-name { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.sum-name h1 { font-family: var(--display); font-weight: 900; font-size: clamp(2.6rem, 5.4vw, 4.4rem); line-height: .9; text-transform: uppercase; }
+.sum-pts { font-family: var(--display); font-weight: 900; font-size: clamp(2.6rem, 5.4vw, 4.4rem); line-height: .9; color: var(--copper); font-variant-numeric: tabular-nums; }
+.sum-detail { color: var(--muted); }
+.tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.tile { display: grid; gap: 6px; align-content: start; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); animation: rise .4s ease-out both; animation-delay: calc(var(--i) * 50ms); }
+.tile-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tile-o { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--copper); }
+.tile strong { font-family: var(--display); font-weight: 900; font-size: 2rem; line-height: 1; text-transform: uppercase; letter-spacing: .01em; }
+.tile p { color: var(--muted); }
+.result { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; max-width: 720px; width: 100%; margin: 0 auto; }
+.versus { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.versus-side { display: flex; align-items: center; gap: 12px; animation: riseBig .5s cubic-bezier(.2, .8, .2, 1) both; }
+.versus-side:last-child { animation-delay: .15s; }
+.versus-side b { font-family: var(--display); font-weight: 900; font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: .9; text-transform: uppercase; }
+.versus-vs { font-family: var(--display); font-weight: 800; font-size: 1.6rem; color: var(--copper); }
+.champ-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.champ-wrap .badge-xl { animation: badgeIn .7s cubic-bezier(.2, .8, .2, 1) both; }
+.champ { font-family: var(--display); font-weight: 900; font-size: clamp(3.6rem, min(11vw, 17vh), 8.5rem); line-height: .9; text-transform: uppercase; overflow-wrap: anywhere; animation: riseBig .6s .15s cubic-bezier(.2, .8, .2, 1) both; }
+.result-line { font-size: 1.15rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.result .runes { max-width: 100%; }
+
+/* Puan tablosu */
+.board-card { width: 100%; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; text-align: left; }
+.board-title { padding: 12px 16px; font-size: .74rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); border-bottom: 1px solid var(--line); }
+.board-scroll { overflow-x: auto; }
+.board { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.board th { padding: 9px 16px; text-align: left; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+.board td { padding: 10px 16px; border-top: 1px solid var(--line); }
+.board tbody tr { animation: rise .4s ease-out both; animation-delay: calc(var(--i) * 60ms); }
+.board .num { width: 1%; white-space: nowrap; text-align: right; }
+.board .rank { width: 1%; white-space: nowrap; color: var(--muted); font-weight: 600; }
+.board .pts { font-family: var(--display); font-weight: 900; font-size: 1.5em; line-height: 1; }
+.board .who { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-weight: 600; }
+.board tr.is-hi td { background: var(--copper-soft); }
+.board tr.is-hi .chip { background: var(--surface); }
+
+/* Pencereler */
+dialog { width: min(920px, calc(100% - 32px)); max-height: min(88vh, 920px); padding: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+dialog[open] { display: flex; flex-direction: column; }
+dialog::backdrop { background: var(--backdrop); }
+.dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.dlg-head h2 { font-family: var(--display); font-weight: 900; font-size: 1.9rem; line-height: 1; text-transform: uppercase; }
+.dlg-tools { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+.dlg-tools span { flex: none; color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.dlg-body { overflow: auto; min-height: 0; padding: 18px 20px 22px; }
+.rules { display: grid; gap: 20px; }
+.rules section { display: grid; gap: 8px; }
+.rules h3 { font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); }
+.rules ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 70ch; }
+.keys { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); }
+kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line); border-bottom-width: 2px; background: var(--panel); color: var(--ink); }
+.wlist { list-style: none; margin: 0; padding: 0; display: grid; }
+.wlist li { display: grid; grid-template-columns: minmax(0, 200px) minmax(0, 1fr); gap: 4px 20px; padding: 12px 0; border-top: 1px solid var(--line); }
+.wlist li:first-child { border-top: 0; padding-top: 0; }
+.wl-word { display: grid; gap: 4px; justify-items: start; align-content: start; }
+.wl-word strong { font-family: var(--display); font-weight: 900; font-size: 1.7rem; line-height: 1; text-transform: uppercase; }
+.wl-info { display: grid; gap: 4px; }
+.wl-taboo { color: var(--muted); font-size: .92rem; }
+.wl-empty { color: var(--muted); padding: 12px 0; }
+
+@media (max-width: 960px) {
+  .setup { grid-template-columns: 1fr; }
+}
+@media (min-width: 900px) {
+  .play .card { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .play .card-taboo { border-top: 0; border-left: 1px solid var(--line); }
+}
+@media (max-width: 700px) {
+  .play-top { grid-template-columns: minmax(0, 1fr) auto; }
+  .tools { grid-column: 1 / -1; justify-self: stretch; justify-content: flex-start; }
+  .actions { grid-template-columns: 1fr 1fr; }
+  .act-ok { grid-column: 1 / -1; order: -1; }
+  .wlist li { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.8 2.8h3.9v3.9L21.5 12l-2.8 2.8v3.9h-3.9L12 21.5l-2.8-2.8H5.3v-3.9L2.5 12l2.8-2.8V5.3h3.9z"/></svg>
+      <span>Kadim Kelimeler</span>
+    </div>
+    <span class="stage-pill" id="stageLabel"></span>
+    <nav class="bar-actions" aria-label="Oyun menüsü">
+      <button class="btn btn-quiet" id="btnRules" type="button">Kurallar</button>
+      <button class="btn btn-quiet" id="btnWords" type="button">Kelime listesi</button>
+      <button class="btn btn-quiet" id="btnSound" type="button" aria-pressed="true">Ses açık</button>
+      <button class="btn btn-quiet" id="btnFull" type="button">Tam ekran</button>
+      <button class="btn btn-quiet" id="btnReset" type="button">Yeni turnuva</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Kurulum -->
+    <section id="vSetup" class="view">
+      <div class="setup">
+        <div class="intro">
+          <p class="eyebrow">Sınıf turnuvası</p>
+          <h1>Kadim Kelimeler <span>Tabu</span></h1>
+          <p class="lead">Unutulmaya yüz tutmuş kelimeleri, yasak kelimeleri söylemeden anlatın. Takımınız eski kelimenin kendisini bulmalı.</p>
+          <div class="rune-block">
+            <div class="runes" data-runes aria-hidden="true"></div>
+            <span class="rune-cap">Göktürk (Orhun) harfleri</span>
+          </div>
+          <div class="facts" id="facts"></div>
+          <div class="sample-block">
+            <div class="sample-head">
+              <span class="eyebrow">Örnek kart</span>
+              <button class="btn btn-quiet" id="btnSample" type="button">Başka örnek</button>
+            </div>
+            <article class="card sample" id="sampleCard">
+              <div class="card-main">
+                <span class="origin" data-f="origin"></span>
+                <h2 class="word" data-f="word"></h2>
+                <p class="meaning" data-f="meaning"></p>
+              </div>
+              <div class="card-taboo">
+                <p class="taboo-head">Yasak kelimeler</p>
+                <ol class="taboo" data-f="taboo"></ol>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <form class="form" id="setupForm" novalidate>
+          <div class="form-section">
+            <h2>Takımlar <span id="teamCount"></span></h2>
+            <p class="form-hint">Simgeye dokunarak takımın rengini ve simgesini değiştirin.</p>
+            <ol class="teams" id="teamList"></ol>
+            <div><button class="btn" id="btnAddTeam" type="button">+ Takım ekle</button></div>
+          </div>
+          <div class="form-section">
+            <h2>Ayarlar</h2>
+            <div class="fields" id="fields"></div>
+          </div>
+          <div class="plan-note" id="planNote"><b></b><span></span></div>
+          <button class="btn btn-primary btn-block" id="btnStart" type="submit">Turnuvayı başlat</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sıradaki takım -->
+    <section id="vReady" class="view ready" hidden>
+      <p class="eyebrow" id="readyStage"></p>
+      <span id="readyBadge"></span>
+      <h1 class="ready-name" id="readyTeam"></h1>
+      <ul class="cues">
+        <li>Anlatıcı tahtaya geçsin</li>
+        <li>Takım tahtaya sırtını dönsün</li>
+        <li>Rakipten bir gözcü yasakları izlesin</li>
+      </ul>
+      <p class="rule-note">Eski kelimenin kendisi söylenmeden doğru sayılmaz.</p>
+      <button class="btn btn-primary btn-lg" id="btnGo" type="button">Süreyi başlat</button>
+      <div class="board-card" id="readyBoard"></div>
+    </section>
+
+    <!-- Oyun -->
+    <section id="vPlay" class="view play" hidden>
+      <div class="play-top">
+        <div class="turn-info">
+          <span id="playBadge"></span>
+          <div>
+            <p class="turn-team" id="playTeam"></p>
+            <div class="turn-score">
+              <span class="turn-pts" id="sPts">0</span>
+              <span class="chip chip-ok"><span id="sOk">0</span> doğru</span>
+              <span class="chip chip-bad"><span id="sTabu">0</span> tabu</span>
+              <span class="float" id="float" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="clock" id="clock" role="timer" aria-label="Kalan süre">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="52"/><circle class="arc" id="arc" cx="60" cy="60" r="52"/></svg>
+          <div class="clock-num"><b id="timer">60</b><span id="clockState">saniye</span></div>
+        </div>
+        <div class="tools">
+          <button class="btn" id="btnUndo" type="button">Geri al</button>
+          <button class="btn" id="btnPause" type="button">Duraklat</button>
+          <button class="btn" id="btnStop" type="button">Turu bitir</button>
+        </div>
+      </div>
+      <article class="card" id="card">
+        <div class="card-main">
+          <span class="origin" data-f="origin"></span>
+          <h2 class="word" data-f="word"></h2>
+          <p class="meaning" data-f="meaning"></p>
+        </div>
+        <div class="card-taboo">
+          <p class="taboo-head">Yasak kelimeler</p>
+          <ol class="taboo" data-f="taboo"></ol>
+        </div>
+        <div class="cover" id="cover" hidden>
+          <strong>Süre durdu</strong>
+          <span>Devam etmek için “Devam et” düğmesine basın.</span>
+        </div>
+      </article>
+      <div class="actions">
+        <button class="act act-bad" id="btnTabu" type="button"><span class="act-label">Tabu</span><span class="act-sub">−1 puan · T</span></button>
+        <button class="act act-pass" id="btnPas" type="button"><span class="act-label">Pas</span><span class="act-sub" id="passSub"></span></button>
+        <button class="act act-ok" id="btnOk" type="button"><span class="act-label">Doğru</span><span class="act-sub">+1 puan · D</span></button>
+      </div>
+    </section>
+
+    <!-- Tur özeti -->
+    <section id="vSummary" class="view summary" hidden>
+      <div class="sum-head">
+        <div class="sum-title">
+          <p class="eyebrow" id="sumStage"></p>
+          <div class="sum-name"><span id="sumBadge"></span><h1 id="sumTeam"></h1><span class="sum-pts" id="sumPts"></span></div>
+          <p class="sum-detail" id="sumDetail"></p>
+        </div>
+        <button class="btn btn-primary" id="btnNext" type="button"></button>
+      </div>
+      <ul class="tiles" id="sumList"></ul>
+    </section>
+
+    <!-- Grup sonu -->
+    <section id="vTable" class="view" hidden>
+      <div class="result">
+        <p class="eyebrow">Grup aşaması bitti · Final eşleşmesi</p>
+        <div class="versus" id="versus"></div>
+        <div class="board-card" id="groupBoard"></div>
+        <button class="btn btn-primary btn-lg" id="btnFinal" type="button">Finale başla</button>
+      </div>
+    </section>
+
+    <!-- Şampiyon -->
+    <section id="vDone" class="view" hidden>
+      <div class="result">
+        <div class="runes" data-runes aria-hidden="true"></div>
+        <div class="champ-wrap">
+          <span id="champBadge"></span>
+          <p class="eyebrow">Şampiyon</p>
+          <h1 class="champ" id="champ"></h1>
+        </div>
+        <p class="result-line" id="champScore"></p>
+        <div class="board-card" id="doneBoard"></div>
+        <button class="btn btn-primary" id="btnAgain" type="button">Yeni turnuva kur</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Geri sayım ve "süre doldu" katmanı -->
+<div class="overlay" id="overlay" hidden aria-live="assertive">
+  <span id="ovBadge"></span>
+  <p class="ov-title" id="ovTitle"></p>
+  <p class="ov-big" id="ovBig"></p>
+</div>
+<canvas class="confetti" id="confetti" hidden></canvas>
+
+<dialog id="dlgRules" aria-labelledby="rulesTitle">
+  <div class="dlg-head">
+    <h2 id="rulesTitle">Kurallar</h2>
+    <button class="icon-btn" type="button" data-close aria-label="Kapat">×</button>
+  </div>
+  <div class="dlg-body" tabindex="-1" autofocus>
+    <div class="rules">
+      <section>
+        <h3>Oynanış</h3>
+        <ul>
+          <li>Her turda takımdan bir anlatıcı tahtaya geçer. Takım arkadaşları tahtaya sırtını döner.</li>
+          <li>Kartta kelimenin anlamı da yazar. Anlatıcı kelimeyi bilmese bile anlamdan yola çıkarak anlatabilir.</li>
+          <li>Takım eski kelimenin kendisini söylemelidir. Örneğin “okul” demek yetmez, “mektep” denmelidir.</li>
+          <li>Rakip takımdan bir gözcü kartı izler ve yasak kelime duyunca “Tabu!” der.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Yasaklar</h3>
+        <ul>
+          <li>Kartın kelimesi, beş yasak kelime ve bunların ekli hâlleri.</li>
+          <li>El kol hareketi, ses taklidi, harf harf söyleme, “şununla kafiyeli” gibi ipuçları.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Puanlama</h3>
+        <ul>
+          <li>Doğru +1, Tabu −1 puan. Pas puanı değiştirmez; her turda sınırlı pas hakkı vardır.</li>
+          <li>Yanlışlıkla basılan düğme “Geri al” ile düzeltilir. Tartışma çıkarsa “Duraklat” ile süre durdurulur.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Turnuva düzeni</h3>
+        <ul>
+          <li>2 takım: tek maç. Her takım seçilen sayıda tur oynar.</li>
+          <li>3 veya daha fazla takım: grup aşamasında puanlar toplanır, ilk iki takım finale çıkar. Puan eşitse daha az tabu yapan, o da eşitse listede üstte olan takım geçer.</li>
+          <li>Finalde puanlar sıfırlanır. Final ya da maç berabere biterse iki takım birer uzatma turu oynar.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Klavye kısayolları</h3>
+        <div class="keys">
+          <span><kbd>D</kbd> Doğru</span>
+          <span><kbd>T</kbd> Tabu</span>
+          <span><kbd>P</kbd> Pas</span>
+          <span><kbd>G</kbd> Geri al</span>
+          <span><kbd>Boşluk</kbd> Duraklat</span>
+          <span><kbd>Enter</kbd> Sonraki adım</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dlgWords" aria-labelledby="wordsTitle">
+  <div class="dlg-head">
+    <h2 id="wordsTitle">Kelime listesi</h2>
+    <button class="icon-btn" type="button" data-close aria-label="Kapat">×</button>
+  </div>
+  <div class="dlg-tools">
+    <input class="input" id="wordSearch" type="search" placeholder="Kelime, anlam ya da yasak kelime ara" aria-label="Kelime ara" autocomplete="off">
+    <span id="wordHits"></span>
+  </div>
+  <div class="dlg-body" tabindex="-1" autofocus>
+    <ul class="wlist" id="wordList"></ul>
+  </div>
+</dialog>
+
+<script>
+document.documentElement.lang = 'tr';
+
+const ORIGIN = { E: 'Eski Türkçe', T: 'Türkçe', A: 'Arapça', F: 'Farsça' };
+
+// [kelime, köken, anlam, yasak kelimeler]
+const WORDS = [
+  ["Tengri", "E", "Gök; eski Türklerin gök tanrısı.", "Tanrı|gök|inanç|din|Göktürk"],
+  ["Bodun", "E", "Halk, millet. Orhun Yazıtları'nda sık geçer.", "halk|millet|toplum|kağan|Orhun"],
+  ["Kağan", "E", "Eski Türk devletlerinde hükümdar.", "hükümdar|kral|han|Bilge|Göktürk"],
+  ["Yağı", "E", "Düşman.", "düşman|savaş|rakip|hasım|saldırmak"],
+  ["Sü", "E", "Ordu.", "ordu|asker|savaş|komutan|subaşı"],
+  ["Bitig", "E", "Yazı, yazıt; kitap.", "kitap|yazı|yazıt|okumak|Orhun"],
+  ["Bengü", "E", "Sonsuz, ebedî. Orhun anıtlarına “bengü taş” denir.", "sonsuz|ebedî|ölümsüz|taş|kalıcı"],
+  ["Alp", "E", "Yiğit, kahraman savaşçı.", "yiğit|kahraman|cesur|savaşçı|destan"],
+  ["Otağ", "E", "Hükümdar ya da komutan çadırı.", "çadır|hükümdar|padişah|kurmak|ordu"],
+  ["Tamga", "E", "Boyların hayvanlarına ve eşyalarına vurduğu işaret, damga.", "damga|işaret|mühür|boy|sembol"],
+  ["Kut", "E", "Talih, mutluluk; Tanrı'nın verdiğine inanılan yönetme hakkı.", "talih|şans|uğur|mutluluk|devlet"],
+  ["Balbal", "E", "Eski Türklerde mezarın yanına dikilen, öldürülen düşmanı simgeleyen taş.", "mezar|taş|heykel|düşman|dikmek"],
+  ["Sagu", "E", "Ölen kişinin ardından söylenen ağıt.", "ağıt|ölüm|cenaze|şiir|yas"],
+  ["Kopuz", "E", "Eski Türklerin telli çalgısı, sazın atası.", "saz|bağlama|ozan|tel|çalmak"],
+  ["Kurgan", "E", "Üstü toprakla örtülmüş büyük mezar, höyük.", "mezar|höyük|toprak|gömmek|tepe"],
+  ["Yuğ", "E", "Eski Türklerde cenaze töreni.", "cenaze|tören|ölüm|yas|ağıt"],
+  ["Akçe", "T", "Osmanlı'nın küçük gümüş parası.", "para|Osmanlı|gümüş|bozuk|kuruş"],
+  ["Sancak", "T", "Bayrak; Osmanlı'da bir yönetim bölgesi.", "bayrak|direk|asker|Osmanlı|kırmızı"],
+  ["Çağlayan", "T", "Şelale.", "şelale|su|akmak|dere|yüksek"],
+  ["Ahali", "A", "Bir yerde oturan halk, yerli insanlar.", "halk|insan|köy|şehir|yaşamak"],
+  ["Müstakbel", "A", "Gelecekte olacak, ileriki.", "gelecek|ileride|eş|nişanlı|zaman"],
+  ["Keder", "A", "Derin üzüntü, tasa.", "üzüntü|acı|hüzün|ağlamak|mutsuz"],
+  ["Hasret", "A", "Özlem, birine kavuşma isteği.", "özlem|uzak|sevgili|kavuşmak|gurbet"],
+  ["Gurbet", "A", "Doğup büyüdüğün yerden uzakta olma; uzak diyar.", "memleket|uzak|yabancı|özlem|göç"],
+  ["Mektep", "A", "Okul.", "okul|öğrenci|öğretmen|ders|sınıf"],
+  ["Muallim", "A", "Öğretmen.", "öğretmen|okul|ders|hoca|öğrenci"],
+  ["Talebe", "A", "Öğrenci.", "öğrenci|okul|ders|sınıf|öğretmen"],
+  ["Kitabe", "A", "Taşa ya da duvara kazınmış yazı, yazıt.", "yazıt|taş|mezar|duvar|yazı"],
+  ["Valide", "A", "Anne.", "anne|baba|aile|sultan|çocuk"],
+  ["Seher", "A", "Tan yerinin ağardığı vakit, sabaha karşı.", "sabah|erken|güneş|vakit|şafak"],
+  ["Lisan", "A", "Dil.", "dil|konuşmak|yabancı|İngilizce|kelime"],
+  ["Sefine", "A", "Gemi.", "gemi|deniz|kaptan|liman|yolcu"],
+  ["Hekim", "A", "Doktor.", "doktor|hasta|ilaç|hastane|tedavi"],
+  ["Ecza", "A", "İlaç; ilacı oluşturan maddeler.", "ilaç|reçete|hasta|doktor|hap"],
+  ["Vazife", "A", "Görev.", "görev|ödev|iş|sorumluluk|yapmak"],
+  ["İmtihan", "A", "Sınav.", "sınav|test|soru|not|okul"],
+  ["Tahsil", "A", "Öğrenim, eğitim görme.", "eğitim|okul|okumak|üniversite|diploma"],
+  ["Tabiat", "A", "Doğa; ayrıca huy, karakter.", "doğa|ağaç|orman|çevre|hayvan"],
+  ["Semâ", "A", "Gökyüzü.", "gökyüzü|bulut|mavi|yıldız|uçmak"],
+  ["Ziyafet", "A", "Bol yemekli, konuklu sofra.", "yemek|sofra|davet|misafir|kalabalık"],
+  ["Esvap", "A", "Giysi, elbise.", "giysi|elbise|kıyafet|giymek|dolap"],
+  ["Hicran", "A", "Ayrılık ve ayrılığın verdiği acı.", "ayrılık|acı|sevgili|özlem|hasret"],
+  ["Visal", "A", "Sevgiliye kavuşma.", "kavuşmak|buluşmak|sevgili|ayrılık|aşk"],
+  ["Ruhsat", "A", "Resmî izin; izin belgesi.", "izin|belge|ehliyet|belediye|kâğıt"],
+  ["Eşkıya", "A", "Dağda yol kesen haydut.", "haydut|soygun|dağ|silah|hırsız"],
+  ["Harami", "A", "Hırsız, yol kesici.", "hırsız|Ali Baba|çalmak|soymak|kırk"],
+  ["Nisyan", "A", "Unutma, unutkanlık.", "unutmak|hafıza|hatırlamak|akıl|insan"],
+  ["Tevazu", "A", "Alçakgönüllülük.", "alçakgönüllü|kibir|mütevazı|gösteriş|böbürlenmek"],
+  ["Kâtip", "A", "Yazı işlerine bakan görevli, yazıcı.", "yazmak|sekreter|memur|kalem|mahkeme"],
+  ["Hokka", "A", "Mürekkep konan küçük kap.", "mürekkep|kalem|şişe|yazı|divit"],
+  ["Cerrah", "A", "Ameliyat yapan hekim.", "doktor|ameliyat|neşter|hastane|kesmek"],
+  ["Arzuhal", "A", "Dilekçe.", "dilekçe|istek|yazmak|devlet|şikâyet"],
+  ["Kadı", "A", "Osmanlı'da davalara bakan yargıç.", "hâkim|mahkeme|Osmanlı|karar|yargıç"],
+  ["Sadrazam", "A", "Osmanlı'da padişahtan sonra gelen en yüksek devlet adamı.", "vezir|padişah|başbakan|Osmanlı|divan"],
+  ["Ziraat", "A", "Tarım.", "tarım|çiftçi|tarla|ekin|banka"],
+  ["Mütercim", "A", "Çevirmen.", "çevirmen|tercüme|dil|kitap|yabancı"],
+  ["Müellif", "A", "Yazar, eser sahibi.", "yazar|kitap|eser|yazmak|roman"],
+  ["Zemheri", "A", "Kışın en soğuk dönemi.", "kış|soğuk|kar|ocak|ayaz"],
+  ["Tufan", "A", "Büyük sel, su baskını.", "sel|Nuh|su|gemi|yağmur"],
+  ["Seyyah", "A", "Gezgin, seyahat eden kimse.", "gezgin|seyahat|Evliya Çelebi|yolculuk|turist"],
+  ["Tebessüm", "A", "Gülümseme.", "gülümsemek|gülmek|yüz|mutlu|dudak"],
+  ["Mesut", "A", "Mutlu.", "mutlu|sevinçli|neşeli|keyifli|mutsuz"],
+  ["Kıymet", "A", "Değer.", "değer|önem|para|pahalı|bilmek"],
+  ["Kelam", "A", "Söz.", "söz|konuşmak|cümle|kelime|laf"],
+  ["Nutuk", "A", "Söylev; Atatürk'ün 1927'de okuduğu büyük söylev.", "söylev|konuşma|Atatürk|kürsü|kitap"],
+  ["Lügat", "A", "Sözlük; kelime.", "sözlük|kelime|anlam|kitap|TDK"],
+  ["İstikbal", "A", "Gelecek; ayrıca karşılama.", "gelecek|yarın|zaman|geçmiş|gençlik"],
+  ["İstiklal", "A", "Bağımsızlık.", "bağımsızlık|marş|özgürlük|savaş|Mehmet Akif"],
+  ["Hürriyet", "A", "Özgürlük.", "özgürlük|serbest|esir|bağımsızlık|gazete"],
+  ["Esaret", "A", "Tutsaklık.", "tutsak|esir|zincir|özgürlük|köle"],
+  ["Şecaat", "A", "Yiğitlik, cesaret.", "cesaret|yiğit|korkusuz|kahraman|savaş"],
+  ["Hasis", "A", "Cimri.", "cimri|para|cömert|eli sıkı|harcamak"],
+  ["Hıyanet", "A", "İhanet.", "ihanet|hain|güven|aldatmak|arkadan"],
+  ["Havadis", "A", "Haberler.", "haber|gazete|yeni|duymak|televizyon"],
+  ["Kâinat", "A", "Evren.", "evren|uzay|dünya|yıldız|gezegen"],
+  ["Gıybet", "A", "Birini arkasından çekiştirme.", "dedikodu|arkadan|konuşmak|kötülemek|laf"],
+  ["Mahcup", "A", "Utanmış, utangaç.", "utanmak|kızarmak|utangaç|hata|yüz"],
+  ["Firar", "A", "Kaçma.", "kaçmak|hapishane|asker|kaçak|saklanmak"],
+  ["Mahpus", "A", "Hapsedilmiş, tutuklu.", "hapis|mahkûm|cezaevi|tutuklu|suç"],
+  ["Nazenin", "F", "Nazlı, ince ve zarif.", "nazlı|zarif|kibar|güzel|narin"],
+  ["Hane", "F", "Ev; bir evde yaşayanların tümü.", "ev|aile|oda|nüfus|yaşamak"],
+  ["Peder", "F", "Baba.", "baba|anne|aile|oğul|ebeveyn"],
+  ["Mehtap", "F", "Ay ışığı.", "ay|ışık|gece|deniz|dolunay"],
+  ["Dilber", "F", "Gönül çeken, güzel kimse.", "güzel|sevgili|yakışıklı|alımlı|kadın"],
+  ["Ferman", "F", "Padişahın yazılı buyruğu.", "padişah|emir|Osmanlı|kâğıt|yasa"],
+  ["Feryat", "F", "Acıyla bağırma, haykırış.", "bağırmak|ağlamak|çığlık|ses|yardım"],
+  ["Âşina", "F", "Tanıdık, bildik.", "tanıdık|bilmek|yabancı|alışık|yüz"],
+  ["Bigâne", "F", "İlgisiz, yabancı, kayıtsız.", "ilgisiz|yabancı|umursamaz|soğuk|kayıtsız"],
+  ["Ahenk", "F", "Uyum, düzen.", "uyum|müzik|ses|düzen|armoni"],
+  ["Çerağ", "F", "Kandil, ışık.", "ışık|mum|kandil|yakmak|karanlık"],
+  ["Bostan", "F", "Sebze ve meyve bahçesi.", "bahçe|sebze|karpuz|tarla|sulamak"],
+  ["Bezirgân", "F", "Tüccar.", "tüccar|ticaret|satmak|kervan|mal"],
+  ["Hazan", "F", "Sonbahar; solgunluk.", "sonbahar|yaprak|mevsim|sarı|düşmek"],
+  ["Bedbaht", "F", "Talihsiz, mutsuz.", "mutsuz|talihsiz|şanssız|üzgün|mutlu"],
+  ["Cenk", "F", "Savaş.", "savaş|asker|kılıç|düşman|kavga"],
+  ["Derya", "F", "Deniz.", "deniz|okyanus|dalga|su|gemi"]
+];
+WORDS.forEach(w => console.assert(ORIGIN[w[1]] && w[3].split('|').length === 5, 'Kelime verisi hatalı:', w[0]));
+
+// Takım kimlikleri: renk + eski Türk motifi (24x24 çizgi simge)
+const IDS = [
+  { n: 'Ok', c: '#1d5c96', d: 'M4 20L19 5M12 5h7v7M7 17H3M7 17v4' },
+  { n: 'Yay', c: '#1f7a5a', d: 'M7 3c10 3 10 15 0 18M7 3v18M3 12h14M14 9l3 3-3 3' },
+  { n: 'Güneş', c: '#b04a26', d: 'M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1' },
+  { n: 'Ay', c: '#2c3a7a', d: 'M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z' },
+  { n: 'Dağ', c: '#5f6f1f', d: 'M2 20l7-12 4 6 3-4 6 10zM7.5 10.5l1.5 1.5 1.5-1.5' },
+  { n: 'Yıldız', c: '#a5760f', d: 'M12 2.5l2.8 2.8h3.9v3.9L21.5 12l-2.8 2.8v3.9h-3.9L12 21.5l-2.8-2.8H5.3v-3.9L2.5 12l2.8-2.8V5.3h3.9z' },
+  { n: 'Kalkan', c: '#8c2741', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM12 7v10M7.5 12h9' },
+  { n: 'Hayat ağacı', c: '#138a96', d: 'M12 21V4M12 16l-5-4M12 16l5-4M12 11l-4-3.5M12 11l4-3.5M12 7l-2.5-2.5M12 7l2.5-2.5M8 21h8' },
+  { n: 'Tuğ', c: '#7a3f8f', d: 'M12 22V7M9 3.5a3 3 0 0 0 6 0M12 8c-3 2-4 5-4 9M12 8c3 2 4 5 4 9M12 8v9' },
+  { n: 'Otağ', c: '#7a4b2a', d: 'M3 20h18M4 20v-6Q12 3 20 14v6M12 5V3M10 20v-4h4v4' },
+  { n: 'Dalga', c: '#b0406f', d: 'M2 9c3-3 5-3 7 0s4 3 7 0 4-3 6 0M2 15c3-3 5-3 7 0s4 3 7 0 4-3 6 0' },
+  { n: 'Ateş', c: '#4f5b66', d: 'M12 21c-4 0-7-3-7-7 0-4 4-6 4-10 2 1 3 3 3 5 1-1 2-2 2-4 3 2 5 6 5 9 0 4-3 7-7 7z' }
+];
+
+const KEY = 'kadim-tabu-v3';
+const DEFAULT_TEAMS = ['Orhun', 'Kaşgarlı', 'Yunus Emre', 'Dede Korkut'];
+const DEFAULTS = { time: 60, rounds: 2, pass: 3, sound: 1 };
+const FIELDS = [
+  { key: 'time', label: 'Tur süresi', opts: [[45, '45 sn'], [60, '60 sn'], [90, '90 sn'], [120, '2 dk']] },
+  { key: 'rounds', label: 'Tur sayısı', hint: 'Her takım için', opts: [[1, '1'], [2, '2'], [3, '3']] },
+  { key: 'pass', label: 'Pas hakkı', hint: 'Her turda', opts: [[0, 'Yok'], [1, '1'], [2, '2'], [3, '3'], [5, '5']] }
+];
+const VIEWS = ['vSetup', 'vReady', 'vPlay', 'vSummary', 'vTable', 'vDone'];
+const RESULT = { ok: ['Doğru', 'chip-ok'], tabu: ['Tabu', 'chip-bad'], pas: ['Pas', 'chip-muted'], yarim: ['Yarım kaldı', 'chip-gold'] };
+const CIRC = 2 * Math.PI * 52;
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+const signed = n => (n > 0 ? '+' : '') + n;
+const norm = s => s.toLocaleLowerCase('tr').replace(/â/g, 'a').replace(/î/g, 'i').replace(/û/g, 'u');
+function restart(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
+
+let S;             // turnuva durumu (tarayıcıya kaydedilir)
+let T = null;      // oynanan tur (kaydedilmez)
+let timerId = null, endTimer = null, lastMark = 0, audio = null, sampleIdx = 0, busy = false;
+
+/* ---------- Durum ---------- */
+function shuffle(n) {
+  const a = [];
+  for (let i = 0; i < n; i++) a.push(i);
+  for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function fresh(roster, settings) {
+  return {
+    stage: 'setup', view: 'vSetup',
+    roster: roster ? roster.map(r => ({ name: r.name, id: r.id })) : DEFAULT_TEAMS.map((name, id) => ({ name: name, id: id })),
+    settings: Object.assign({}, DEFAULTS, settings),
+    teams: [], rounds: 0, turn: 0, finalists: [],
+    deck: shuffle(WORDS.length), pos: 0, last: null
+  };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+function restore(s) {
+  if (!s || !s.stage || !Array.isArray(s.deck) || s.deck.length !== WORDS.length || !Array.isArray(s.roster)) return fresh();
+  s.settings = Object.assign({}, DEFAULTS, s.settings);
+  if (s.stage === 'setup' || !s.teams.length) { s.stage = 'setup'; s.view = 'vSetup'; }
+  if (s.view === 'vPlay' || (s.view === 'vSummary' && !s.last)) s.view = 'vReady';
+  return s;
+}
+const freeId = used => { for (let i = 0; i < IDS.length; i++) if (used.indexOf(i) < 0) return i; return 0; };
+
+/* ---------- Turnuva yardımcıları ---------- */
+const stageKey = () => S.stage === 'final' ? 'final' : 'group';
+const lineup = () => S.stage === 'final' ? S.finalists : S.teams.map((_, i) => i);
+const teamNow = () => lineup()[S.turn % lineup().length];
+const roundNow = () => Math.floor(S.turn / lineup().length) + 1;
+const stageDone = () => S.turn >= S.rounds * lineup().length;
+function ranked(k) {
+  const ids = k === 'final' ? S.finalists : S.teams.map((_, i) => i);
+  return ids.map(i => Object.assign({ i: i }, S.teams[i]))
+    .sort((a, b) => b.score[k] - a.score[k] || a.tabu[k] - b.tabu[k] || a.i - b.i);
+}
+function tied(k) { const r = ranked(k); return r.length > 1 && r[0].score[k] === r[1].score[k]; }
+function stageName() { return S.stage === 'final' ? 'Final' : (S.teams.length === 2 ? 'Maç' : 'Grup aşaması'); }
+function stageText() {
+  if (S.stage === 'setup') return 'Hazırlık';
+  if (S.stage === 'done') return 'Turnuva bitti';
+  if (S.view === 'vTable') return 'Grup aşaması bitti';
+  const r = Math.min(roundNow(), S.rounds);
+  return stageName() + ' · ' + (r > S.settings.rounds ? 'Uzatma turu' : 'Tur ' + r + '/' + S.settings.rounds);
+}
+
+/* ---------- Parçalar ---------- */
+function badge(id, size) {
+  const d = IDS[id] || IDS[0];
+  const b = el('span', 'badge' + (size ? ' badge-' + size : ''));
+  b.style.setProperty('--tc', d.c);
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d.d + '"/></svg>';
+  b.title = d.n;
+  return b;
+}
+function putBadge(slot, id, size) { slot.textContent = ''; slot.append(badge(id, size)); }
+function fillCard(card, i) {
+  const w = WORDS[i];
+  card.querySelector('[data-f="origin"]').textContent = ORIGIN[w[1]];
+  card.querySelector('[data-f="word"]').textContent = w[0];
+  card.querySelector('[data-f="meaning"]').textContent = w[2];
+  const ol = card.querySelector('[data-f="taboo"]');
+  ol.textContent = '';
+  w[3].split('|').forEach((x, n) => { const li = el('li', null, x); li.style.setProperty('--i', n); ol.append(li); });
+  fitWord(card.querySelector('.word'));
+}
+// Uzun kelime kartın genişliğine sığana kadar küçülür
+function fitWord(w) {
+  w.style.fontSize = '';
+  if (!w.clientWidth) return;
+  let size = parseFloat(getComputedStyle(w).fontSize), n = 0;
+  while (w.scrollWidth > w.clientWidth + 1 && n++ < 24) { size *= 0.93; w.style.fontSize = size + 'px'; }
+}
+function renderBoard(box, k, title, current) {
+  box.textContent = '';
+  box.append(el('div', 'board-title', title));
+  const wrap = el('div', 'board-scroll');
+  const t = el('table', 'board');
+  t.innerHTML = '<thead><tr><th scope="col">Sıra</th><th scope="col">Takım</th><th scope="col" class="num">Tabu</th><th scope="col" class="num">Puan</th></tr></thead>';
+  const tb = el('tbody');
+  ranked(k).forEach((r, n) => {
+    const fin = k === 'group' && S.finalists.indexOf(r.i) > -1;
+    const tr = el('tr', fin || r.i === current ? 'is-hi' : null);
+    tr.style.setProperty('--i', n);
+    const who = el('div', 'who');
+    who.append(badge(r.id, 'sm'), el('span', null, r.name));
+    if (fin) who.append(el('span', 'chip chip-copper', 'Finalist'));
+    if (r.i === current) who.append(el('span', 'chip chip-copper', 'Sırada'));
+    const name = el('td');
+    name.append(who);
+    tr.append(el('td', 'rank', n + 1), name, el('td', 'num', r.tabu[k]), el('td', 'num pts', r.score[k]));
+    tb.append(tr);
+  });
+  t.append(tb);
+  wrap.append(t);
+  box.append(wrap);
+}
+function countUp(node, to, fmt) {
+  if (reduceMotion || !to) { node.textContent = fmt(to); return; }
+  const t0 = performance.now(), dur = 700;
+  (function frame(t) {
+    const k = Math.min(1, (t - t0) / dur);
+    node.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3))));
+    if (k < 1) requestAnimationFrame(frame);
+  })(t0);
+}
+
+/* ---------- Görünümler ---------- */
+function renderSetup() {
+  renderTeams();
+  FIELDS.forEach(f => { const r = $('opt-' + f.key + '-' + S.settings[f.key]); if (r) r.checked = true; });
+  renderPlan();
+  fillCard($('sampleCard'), sampleIdx);
+}
+function renderTeams() {
+  const ol = $('teamList');
+  ol.textContent = '';
+  S.roster.forEach((r, i) => {
+    const li = el('li', 'team-row');
+    const bb = el('button', 'badge-btn');
+    bb.type = 'button';
+    bb.setAttribute('aria-label', (i + 1) + '. takımın simgesini değiştir, şu an ' + IDS[r.id].n);
+    bb.append(badge(r.id));
+    bb.addEventListener('click', () => {
+      const used = S.roster.map(x => x.id);
+      for (let k = 1; k < IDS.length; k++) {
+        const cand = (r.id + k) % IDS.length;
+        if (used.indexOf(cand) < 0) { r.id = cand; break; }
+      }
+      renderTeams(); save();
+      $('teamList').children[i].querySelector('.badge-btn').focus();
+    });
+    const inp = el('input', 'input');
+    inp.id = 'team' + i; inp.value = r.name; inp.maxLength = 24; inp.autocomplete = 'off';
+    inp.placeholder = 'Takım ' + (i + 1);
+    inp.setAttribute('aria-label', (i + 1) + '. takımın adı');
+    inp.addEventListener('input', () => { r.name = inp.value; save(); });
+    inp.addEventListener('keydown', e => { // Enter turnuvayı başlatmasın, sonraki kutuya geçsin
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const nx = $('team' + (i + 1));
+      if (nx) nx.focus(); else inp.blur();
+    });
+    const rm = el('button', 'icon-btn', '×');
+    rm.type = 'button'; rm.title = 'Takımı sil';
+    rm.disabled = S.roster.length <= 2;
+    rm.setAttribute('aria-label', (i + 1) + '. takımı sil');
+    rm.addEventListener('click', () => { S.roster.splice(i, 1); renderTeams(); renderPlan(); save(); });
+    li.append(bb, inp, rm);
+    ol.append(li);
+  });
+  $('teamCount').textContent = S.roster.length;
+  $('btnAddTeam').disabled = S.roster.length >= IDS.length;
+}
+function renderPlan() {
+  const n = S.roster.length, st = S.settings;
+  const turns = n * st.rounds + (n > 2 ? 2 * st.rounds : 0);
+  const minutes = Math.max(1, Math.round(turns * (st.time + 35) / 60)); // tur arası geçiş ve geri sayım için +35 sn
+  $('planNote').firstChild.textContent = n === 2
+    ? '2 takım: tek maç, her takım ' + st.rounds + ' tur oynar.'
+    : n + ' takım: grup aşaması (her takım ' + st.rounds + ' tur), ardından ilk iki takımla final.';
+  $('planNote').lastChild.textContent = 'Tahmini süre: yaklaşık ' + minutes + ' dakika, uzatmalar hariç.';
+}
+function renderFacts() {
+  const box = $('facts');
+  const add = (num, label) => { const f = el('span', 'fact'); f.append(el('b', null, num), ' ' + label); box.append(f); };
+  add(WORDS.length, 'kelime');
+  ['E', 'A', 'F', 'T'].forEach(o => add(WORDS.filter(w => w[1] === o).length, ORIGIN[o]));
+}
+function renderReady() {
+  const t = S.teams[teamNow()];
+  $('readyStage').textContent = stageText();
+  putBadge($('readyBadge'), t.id, 'lg');
+  $('readyTeam').textContent = t.name;
+  renderBoard($('readyBoard'), stageKey(), S.stage === 'final' ? 'Final skoru' : 'Puan durumu', teamNow());
+}
+function renderSummary() {
+  const L = S.last, t = S.teams[L.team];
+  $('sumStage').textContent = 'Tur bitti · ' + L.stage;
+  putBadge($('sumBadge'), t.id, 'lg');
+  $('sumTeam').textContent = t.name;
+  countUp($('sumPts'), L.pts, n => signed(n) + ' puan');
+  $('sumDetail').textContent = L.ok + ' doğru · ' + L.tabu + ' tabu · ' + L.pas + ' pas. Kelimelerin anlamlarını birlikte okuyun.';
+  $('btnNext').textContent = nextLabel();
+  const ul = $('sumList');
+  ul.textContent = '';
+  L.log.forEach((item, n) => {
+    const w = WORDS[item.c], res = RESULT[item.r];
+    const li = el('li', 'tile');
+    li.style.setProperty('--i', n);
+    const top = el('div', 'tile-top');
+    top.append(el('span', 'chip ' + res[1], res[0]), el('span', 'tile-o', ORIGIN[w[1]]));
+    li.append(top, el('strong', null, w[0]), el('p', null, w[2]));
+    ul.append(li);
+  });
+}
+function nextLabel() {
+  if (!stageDone()) return 'Sıradaki: ' + S.teams[teamNow()].name;
+  if (S.stage === 'group' && S.teams.length > 2) return 'Grup sonuçları';
+  if (tied(stageKey())) return 'Berabere: uzatma turu';
+  return 'Şampiyonu göster';
+}
+function renderTableView() {
+  const box = $('versus');
+  box.textContent = '';
+  S.finalists.forEach((i, n) => {
+    if (n) box.append(el('span', 'versus-vs', 'ile'));
+    const side = el('div', 'versus-side');
+    side.append(badge(S.teams[i].id, 'lg'), el('b', null, S.teams[i].name));
+    box.append(side);
+  });
+  renderBoard($('groupBoard'), 'group', 'Grup aşaması puanları');
+}
+function renderDone() {
+  const k = S.finalists.length ? 'final' : 'group';
+  const r = ranked(k);
+  putBadge($('champBadge'), r[0].id, 'xl');
+  $('champ').textContent = r[0].name;
+  $('champScore').textContent = (k === 'final' ? 'Final' : 'Maç') + ' sonucu: ' + r[0].name + ' ' + r[0].score[k] + ' – ' + r[1].score[k] + ' ' + r[1].name;
+  renderBoard($('doneBoard'), 'group', S.finalists.length ? 'Grup aşaması puanları' : 'Maç puanları');
+}
+const RENDER = { vSetup: renderSetup, vReady: renderReady, vSummary: renderSummary, vTable: renderTableView, vDone: renderDone };
+
+function show(v) {
+  S.view = v;
+  VIEWS.forEach(id => { $(id).hidden = id !== v; });
+  if (RENDER[v]) RENDER[v]();
+  $('stageLabel').textContent = stageText();
+  $('btnReset').hidden = S.stage === 'setup';
+  save();
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Tam ekran katman ---------- */
+function overlay(id, title, big, cls) {
+  putBadge($('ovBadge'), id, 'xl');
+  $('ovTitle').textContent = title;
+  const b = $('ovBig');
+  b.textContent = big;
+  b.className = 'ov-big ' + (cls || '');
+  restart(b, 'pop');
+  $('overlay').hidden = false;
+}
+
+/* ---------- Turnuva akışı ---------- */
+function startTournament() {
+  S.teams = S.roster.map((r, i) => ({ name: r.name.trim() || 'Takım ' + (i + 1), id: r.id, score: { group: 0, final: 0 }, tabu: { group: 0, final: 0 } }));
+  S.stage = 'group'; S.rounds = S.settings.rounds; S.turn = 0; S.finalists = []; S.last = null;
+  show('vReady');
+}
+function startTurn() {
+  if (T || busy) return;
+  initAudio();
+  const team = S.teams[teamNow()];
+  T = { team: teamNow(), ok: 0, tabu: 0, passLeft: S.settings.pass, log: [], card: -1,
+        end: 0, paused: false, left: 0, beeped: 0, counting: true };
+  putBadge($('playBadge'), team.id);
+  $('playTeam').textContent = team.name;
+  $('card').style.setProperty('--tc', IDS[team.id].c);
+  $('arc').style.strokeDasharray = String(CIRC);
+  show('vPlay');
+  nextCard();
+  drawClock(S.settings.time * 1000);
+  // 3-2-1 geri sayım; kart bu sırada katmanın arkasında gizli
+  busy = true;
+  const steps = ['3', '2', '1', 'Başla!'];
+  let n = 0;
+  const step = () => {
+    if (!T || !T.counting) return;
+    if (n === steps.length) return beginClock();
+    overlay(team.id, team.name + ' hazır', steps[n], n === 3 ? 'go small' : '');
+    sfx(n === 3 ? 'go' : 'count');
+    n++;
+    T.cdTimer = setTimeout(step, n === 4 ? 650 : 850);
+  };
+  step();
+}
+function beginClock() {
+  if (!T || !T.counting) return;
+  clearTimeout(T.cdTimer);
+  $('overlay').hidden = true;
+  busy = false;
+  T.counting = false;
+  T.end = Date.now() + S.settings.time * 1000;
+  timerId = setInterval(tick, 100);
+  renderPlay();
+  restart($('card'), 'enter');
+}
+function nextCard() {
+  if (S.pos >= S.deck.length) { S.deck = shuffle(WORDS.length); S.pos = 0; }
+  T.card = S.deck[S.pos++];
+  fillCard($('card'), T.card);
+  renderPlay();
+  save();
+}
+function renderPlay() {
+  $('sPts').textContent = signed(T.ok - T.tabu);
+  $('sOk').textContent = T.ok;
+  $('sTabu').textContent = T.tabu;
+  $('passSub').textContent = T.passLeft > 0 ? T.passLeft + ' hak kaldı · P' : 'Hak kalmadı';
+  const locked = T.paused || T.counting;
+  $('btnOk').disabled = locked;
+  $('btnTabu').disabled = locked;
+  $('btnPas').disabled = locked || T.passLeft <= 0;
+  $('btnUndo').disabled = T.counting || !T.log.length;
+  $('btnPause').disabled = T.counting;
+  $('btnPause').textContent = T.paused ? 'Devam et' : 'Duraklat';
+  $('cover').hidden = !T.paused;
+  $('clockState').textContent = T.paused ? 'durdu' : 'saniye';
+}
+function mark(r) {
+  if (!T || T.paused || T.counting || busy) return;
+  const now = Date.now();
+  if (now - lastMark < 350) return; // tahtada çift dokunmayı tek say
+  lastMark = now;
+  if (r === 'pas') { if (T.passLeft <= 0) return; T.passLeft--; }
+  else if (r === 'ok') T.ok++;
+  else T.tabu++;
+  T.log.push({ c: T.card, r: r });
+  sfx(r);
+  const f = $('float');
+  f.textContent = r === 'ok' ? '+1' : r === 'tabu' ? '−1' : 'Pas';
+  f.className = 'float f-' + r;
+  restart(f, 'on');
+  if (r !== 'pas') restart($('sPts'), 'bump');
+  const card = $('card');
+  card.classList.remove('hit-ok', 'hit-tabu');
+  nextCard();
+  restart(card, 'enter');
+  if (r !== 'pas') restart(card, 'hit-' + r);
+}
+function undo() {
+  if (!T || T.counting || busy || !T.log.length) return;
+  const last = T.log.pop();
+  if (last.r === 'ok') T.ok--;
+  else if (last.r === 'tabu') T.tabu--;
+  else T.passLeft++;
+  S.pos = Math.max(0, S.pos - 1); // ekrandaki kart destede bir sonraki olur
+  T.card = last.c;
+  fillCard($('card'), T.card);
+  restart($('card'), 'enter');
+  sfx('undo');
+  renderPlay();
+  save();
+}
+function togglePause() {
+  if (!T || T.counting || busy) return;
+  if (T.paused) {
+    T.end = Date.now() + T.left;
+    T.paused = false;
+    timerId = setInterval(tick, 100);
+  } else {
+    T.left = Math.max(0, T.end - Date.now());
+    T.paused = true;
+    clearInterval(timerId); timerId = null;
+  }
+  renderPlay();
+}
+function drawClock(rem) {
+  const s = Math.ceil(rem / 1000);
+  $('timer').textContent = s;
+  $('arc').style.strokeDashoffset = String(CIRC * (1 - rem / (S.settings.time * 1000)));
+  $('clock').classList.toggle('low', s <= 10);
+}
+function tick() {
+  if (!T || T.paused || T.counting) return;
+  const rem = Math.max(0, T.end - Date.now());
+  const s = Math.ceil(rem / 1000);
+  drawClock(rem);
+  if (s <= 5 && s > 0 && s !== T.beeped) { T.beeped = s; sfx('tick'); }
+  if (rem <= 0) endTurn(true);
+}
+function endTurn(timeUp) {
+  if (!T || T.counting) return;
+  clearInterval(timerId); timerId = null;
+  T.log.push({ c: T.card, r: 'yarim' });
+  const k = stageKey(), team = S.teams[T.team], pts = T.ok - T.tabu;
+  team.score[k] += pts;
+  team.tabu[k] += T.tabu;
+  S.last = { team: T.team, stage: stageText(), pts: pts, ok: T.ok, tabu: T.tabu,
+             pas: T.log.filter(x => x.r === 'pas').length, log: T.log };
+  S.turn++;
+  S.view = 'vSummary';
+  save(); // sonuç kaydedildi; katman kapanmadan sayfa yenilense bile kaybolmaz
+  T = null;
+  busy = true;
+  sfx('end');
+  overlay(team.id, team.name, timeUp ? 'Süre doldu!' : 'Tur bitti', 'small bad');
+  endTimer = setTimeout(closeEnd, reduceMotion ? 600 : 1500);
+}
+function closeEnd() {
+  clearTimeout(endTimer);
+  if (!busy) return;
+  $('overlay').hidden = true;
+  busy = false;
+  show('vSummary');
+}
+function afterSummary() {
+  if (busy) return;
+  if (!stageDone()) return show('vReady');
+  if (S.stage === 'group' && S.teams.length > 2) {
+    S.finalists = ranked('group').slice(0, 2).map(t => t.i);
+    sfx('fin');
+    return show('vTable');
+  }
+  if (tied(stageKey())) { S.rounds++; return show('vReady'); } // berabere: herkese bir uzatma turu
+  S.stage = 'done';
+  show('vDone');
+  sfx('champ');
+  const champ = ranked(S.finalists.length ? 'final' : 'group')[0];
+  confetti([IDS[champ.id].c, '#9a4a1e', '#a2720e', '#23724a', '#1b1d20', '#f8f7f3']);
+}
+function startFinal() {
+  if (busy) return;
+  S.stage = 'final'; S.rounds = S.settings.rounds; S.turn = 0;
+  show('vReady');
+}
+function newTournament() {
+  clearInterval(timerId); timerId = null; clearTimeout(endTimer);
+  if (T) clearTimeout(T.cdTimer);
+  T = null; busy = false;
+  $('overlay').hidden = true;
+  S = fresh(S.roster, S.settings);
+  show('vSetup');
+}
+
+/* ---------- Konfeti ---------- */
+function confetti(colors) {
+  if (reduceMotion) return;
+  const cv = $('confetti'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1;
+  const W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr;
+  cv.hidden = false;
+  const P = [];
+  for (let i = 0; i < 200; i++) {
+    P.push({ x: W * (.15 + .7 * Math.random()), y: H * (.3 + .15 * Math.random()),
+      vx: (Math.random() - .5) * 18 * dpr, vy: (-Math.random() * 20 - 6) * dpr,
+      w: (7 + Math.random() * 9) * dpr, h: (4 + Math.random() * 6) * dpr,
+      r: Math.random() * 6, vr: (Math.random() - .5) * .35, c: colors[i % colors.length] });
+  }
+  const t0 = performance.now(), life = 4500;
+  (function frame(t) {
+    const age = t - t0;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = Math.max(0, 1 - age / life);
+    P.forEach(p => {
+      p.vy += .42 * dpr; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (age < life) requestAnimationFrame(frame);
+    else { ctx.clearRect(0, 0, W, H); cv.hidden = true; }
+  })(t0);
+}
+
+/* ---------- Ses ---------- */
+// [frekans, başlangıç sn, süre sn, dalga, ses düzeyi, bitiş frekansı]
+const SFX = {
+  ok: [[660, 0, .13, 'sine', .22], [990, .09, .24, 'sine', .22]],
+  tabu: [[160, 0, .38, 'sawtooth', .16, 90]],
+  pas: [[440, 0, .16, 'triangle', .16, 260]],
+  undo: [[520, 0, .08, 'sine', .14], [390, .06, .1, 'sine', .14]],
+  tick: [[880, 0, .07, 'square', .05]],
+  count: [[523, 0, .18, 'sine', .25]],
+  go: [[784, 0, .4, 'sine', .28], [1047, 0, .4, 'sine', .14]],
+  end: [[220, 0, .8, 'sawtooth', .14, 170], [165, 0, .8, 'sawtooth', .1]],
+  fin: [[523, 0, .18, 'triangle', .2], [659, .14, .18, 'triangle', .2], [784, .28, .5, 'triangle', .22]],
+  champ: [[523, 0, .16, 'triangle', .22], [659, .13, .16, 'triangle', .22], [784, .26, .16, 'triangle', .22],
+          [1047, .39, .8, 'triangle', .24], [784, .39, .8, 'sine', .12], [659, .39, .8, 'sine', .1]]
+};
+function initAudio() {
+  try {
+    if (!audio) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
+    if (audio && audio.state === 'suspended') audio.resume();
+  } catch (e) {}
+}
+function sfx(name) {
+  if (!audio || !S.settings.sound) return;
+  try {
+    const t0 = audio.currentTime + .01;
+    SFX[name].forEach(n => {
+      const o = audio.createOscillator(), g = audio.createGain(), at = t0 + n[1], end = at + n[2];
+      o.type = n[3];
+      o.frequency.setValueAtTime(n[0], at);
+      if (n[5]) o.frequency.exponentialRampToValueAtTime(n[5], end);
+      g.gain.setValueAtTime(.0001, at);
+      g.gain.exponentialRampToValueAtTime(n[4], at + .015);
+      g.gain.exponentialRampToValueAtTime(.0001, end);
+      o.connect(g); g.connect(audio.destination);
+      o.start(at); o.stop(end + .02);
+    });
+  } catch (e) {}
+}
+function renderSound() {
+  const on = !!S.settings.sound;
+  $('btnSound').textContent = on ? 'Ses açık' : 'Ses kapalı';
+  $('btnSound').setAttribute('aria-pressed', String(on));
+}
+
+/* ---------- Pencereler ---------- */
+function openDialog(d) {
+  if (T && !T.paused && !T.counting) togglePause(); // pencere açılınca süre dursun
+  if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+}
+function renderWordList() {
+  const q = norm($('wordSearch').value.trim());
+  const ul = $('wordList');
+  ul.textContent = '';
+  let hits = 0;
+  WORDS.map((w, i) => i)
+    .sort((a, b) => WORDS[a][0].localeCompare(WORDS[b][0], 'tr'))
+    .forEach(i => {
+      const w = WORDS[i];
+      if (q && norm(w[0] + ' ' + w[2] + ' ' + w[3] + ' ' + ORIGIN[w[1]]).indexOf(q) < 0) return;
+      hits++;
+      const li = el('li');
+      const head = el('div', 'wl-word');
+      head.append(el('strong', null, w[0]), el('span', 'chip chip-copper', ORIGIN[w[1]]));
+      const info = el('div', 'wl-info');
+      info.append(el('p', null, w[2]), el('p', 'wl-taboo', 'Yasak: ' + w[3].split('|').join(' · ')));
+      li.append(head, info);
+      ul.append(li);
+    });
+  if (!hits) ul.append(el('li', 'wl-empty', 'Bu aramayla eşleşen kelime yok.'));
+  $('wordHits').textContent = hits + ' / ' + WORDS.length;
+}
+
+/* İkinci basışta çalışan düğme: tahtada yanlışlıkla basmaya karşı */
+function confirmButton(btn, label, action) {
+  let armedAt = 0, timer = null;
+  const reset = () => { armedAt = 0; btn.textContent = label; btn.classList.remove('armed'); };
+  btn.addEventListener('click', () => {
+    if (Date.now() - armedAt < 3000) { clearTimeout(timer); reset(); action(); return; }
+    armedAt = Date.now();
+    btn.textContent = 'Emin misiniz? Tekrar basın';
+    btn.classList.add('armed');
+    clearTimeout(timer);
+    timer = setTimeout(reset, 3000);
+  });
+}
+
+/* ---------- Olaylar ---------- */
+function buildFields() {
+  const box = $('fields');
+  FIELDS.forEach(f => {
+    const row = el('div', 'field');
+    const lab = el('span', 'field-label', f.label);
+    lab.id = 'lbl-' + f.key;
+    if (f.hint) lab.append(el('small', null, f.hint));
+    const seg = el('div', 'seg');
+    seg.setAttribute('role', 'radiogroup');
+    seg.setAttribute('aria-labelledby', lab.id);
+    f.opts.forEach(o => {
+      const id = 'opt-' + f.key + '-' + o[0];
+      const inp = el('input');
+      inp.type = 'radio'; inp.name = f.key; inp.id = id; inp.value = o[0];
+      inp.addEventListener('change', () => { S.settings[f.key] = o[0]; renderPlan(); save(); });
+      const l = el('label', null, o[1]);
+      l.htmlFor = id;
+      seg.append(inp, l);
+    });
+    row.append(lab, seg);
+    box.append(row);
+  });
+}
+buildFields();
+renderFacts();
+(function () { // Göktürk harfleri şeridi (Unicode Old Turkic bloğu)
+  let s = '';
+  for (let c = 0x10C00; c <= 0x10C48; c++) s += String.fromCodePoint(c);
+  document.querySelectorAll('[data-runes]').forEach(n => { n.textContent = s; });
+})();
+
+$('setupForm').addEventListener('submit', e => { e.preventDefault(); startTournament(); });
+$('btnAddTeam').addEventListener('click', () => {
+  S.roster.push({ name: 'Takım ' + (S.roster.length + 1), id: freeId(S.roster.map(x => x.id)) });
+  renderTeams(); renderPlan(); save();
+  $('team' + (S.roster.length - 1)).select();
+});
+$('btnSample').addEventListener('click', () => {
+  sampleIdx = (sampleIdx + 1 + Math.floor(Math.random() * (WORDS.length - 1))) % WORDS.length;
+  fillCard($('sampleCard'), sampleIdx);
+  restart($('sampleCard'), 'enter');
+});
+$('btnGo').addEventListener('click', startTurn);
+[['btnOk', () => mark('ok')], ['btnTabu', () => mark('tabu')], ['btnPas', () => mark('pas')],
+ ['btnUndo', undo], ['btnPause', togglePause]].forEach(p => {
+  $(p[0]).addEventListener('click', e => { e.currentTarget.blur(); p[1](); });
+});
+confirmButton($('btnStop'), 'Turu bitir', () => endTurn(false));
+confirmButton($('btnReset'), 'Yeni turnuva', newTournament);
+$('btnNext').addEventListener('click', afterSummary);
+$('btnFinal').addEventListener('click', startFinal);
+$('btnAgain').addEventListener('click', newTournament);
+$('btnRules').addEventListener('click', () => openDialog($('dlgRules')));
+$('btnWords').addEventListener('click', () => { renderWordList(); openDialog($('dlgWords')); });
+$('wordSearch').addEventListener('input', renderWordList);
+$('btnSound').addEventListener('click', () => {
+  S.settings.sound = S.settings.sound ? 0 : 1;
+  renderSound(); save();
+  initAudio(); sfx('ok');
+});
+document.querySelectorAll('dialog').forEach(d => {
+  d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close ? d.close() : d.removeAttribute('open'); });
+});
+$('btnFull').addEventListener('click', () => {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  } catch (e) {}
+});
+document.addEventListener('fullscreenchange', () => {
+  $('btnFull').textContent = document.fullscreenElement ? 'Tam ekrandan çık' : 'Tam ekran';
+});
+document.addEventListener('pointerdown', initAudio, { once: true });
+window.addEventListener('resize', () => { document.querySelectorAll('.word').forEach(fitWord); });
+document.addEventListener('keydown', e => {
+  if (busy || document.querySelector('dialog[open]') || e.ctrlKey || e.metaKey || e.altKey) return;
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  initAudio();
+  const k = e.key.toLocaleLowerCase('tr');
+  if (S.view === 'vPlay') {
+    const act = { d: 'ok', arrowright: 'ok', t: 'tabu', p: 'pas' }[k];
+    if (act) { e.preventDefault(); mark(act); }
+    else if (k === 'g' || k === 'backspace') { e.preventDefault(); undo(); }
+    else if (k === ' ') { e.preventDefault(); togglePause(); }
+  } else if (k === 'enter' || (k === ' ' && S.view === 'vReady')) {
+    const go = { vReady: startTurn, vSummary: afterSummary, vTable: startFinal }[S.view];
+    if (go) { e.preventDefault(); go(); }
+  }
+});
+
+/* ---------- Açılış: yarım kalan turnuvayı geri yükle ---------- */
+sampleIdx = Math.floor(Math.random() * WORDS.length);
+S = restore(load());
+renderSound();
+show(S.view);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { document.querySelectorAll('.word').forEach(fitWord); });
+</script>
