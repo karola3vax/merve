@@ -152,6 +152,19 @@ main { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 0; }
 .cover { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; background: var(--surface); }
 .cover strong { font-family: var(--display); font-weight: 900; font-size: clamp(2.6rem, 6vw, 4.6rem); text-transform: uppercase; line-height: 1; }
 .cover > span { color: var(--muted); }
+.phone-panel { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(14px, 3vh, 28px); text-align: center; padding: 24px; background: var(--surface); }
+.phone-ic { width: 64px; height: 64px; padding: 14px; border-radius: 18px; background: var(--copper-soft); color: var(--copper); }
+.phone-panel h2 { font-family: var(--display); font-weight: 900; font-size: clamp(2.2rem, 4.4vw, 3.6rem); line-height: 1; text-transform: uppercase; }
+.tally { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(16px, 4vw, 56px); }
+.tally div { display: grid; justify-items: center; }
+.tally b { font-family: var(--display); font-weight: 900; font-size: clamp(4rem, min(10vw, 16vh), 9rem); line-height: .9; font-variant-numeric: tabular-nums; }
+.tally span { font-size: .85rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.qr { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); text-align: left; }
+.qr svg { width: 120px; height: 120px; flex: none; }
+.qr b { display: block; font-weight: 800; margin-bottom: 2px; }
+.qr span { color: var(--muted); font-size: .95rem; }
+.qr code { font-family: var(--ui); font-weight: 700; color: var(--copper); }
+.mode { display: grid; gap: 12px; }
 .cover-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 
 /* Animasyonlar */
@@ -397,6 +410,10 @@ kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7
             </div>
           </div>
           <ol class="teams" id="teamList"></ol>
+          <div class="mode">
+            <div class="fields" id="modeField" style="padding:0"></div>
+            <div data-qr hidden></div>
+          </div>
           <details class="settings" id="settings">
             <summary><span>Ayarlar <span class="sv" id="settingsSummary"></span></span><span class="chev chev-open">Değiştir</span><span class="chev chev-close">Kapat</span></summary>
             <div class="fields" id="fields"></div>
@@ -417,6 +434,7 @@ kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7
         <h1 class="ready-name" id="readyTeam"></h1>
       </div>
       <div data-roles></div>
+      <div data-qr hidden></div>
       <button class="btn btn-primary btn-lg" id="btnGo" type="button">Hazırız, süreyi başlat</button>
       <div class="board-card" id="readyBoard"></div>
     </section>
@@ -457,6 +475,15 @@ kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7
           <p class="taboo-head">Bunları söylemek yasak</p>
           <ol class="taboo" data-f="taboo"></ol>
         </div>
+        <div class="phone-panel" id="phonePanel" hidden>
+          <span class="phone-ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2"/></svg></span>
+          <h2>Kelime anlatıcının telefonunda</h2>
+          <div class="tally">
+            <div class="t-ok"><b id="pOk">0</b><span>Doğru</span></div>
+            <div class="t-bad"><b id="pTabu">0</b><span>Tabu</span></div>
+            <div><b id="pPas">0</b><span>Pas</span></div>
+          </div>
+        </div>
         <div class="cover" id="cover" hidden>
           <strong>Süre durdu</strong>
           <span>Kart gizlendi. Hazır olunca devam edin.</span>
@@ -484,7 +511,7 @@ kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7
         <button class="btn btn-primary btn-lg" id="btnNext" type="button"></button>
       </div>
       <div class="sum-grid">
-        <div class="sum-words">
+        <div class="sum-words" id="sumWords">
           <h2 class="sec-title">Bu turdaki kelimeler ve anlamları</h2>
           <ul class="tiles" id="sumList"></ul>
         </div>
@@ -539,6 +566,10 @@ kbd { font-family: var(--ui); font-weight: 700; font-size: .85em; padding: 2px 7
     </ol>
     <p class="howto-foot"><span class="foot-ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6"/></svg></span><span>Süre bitince sıra diğer takıma geçer. Turlar bitince <b>en çok puanı olan takım kazanır.</b></span></p>
   </div>
+</template>
+
+<template id="tplQr">
+  <div class="qr"><svg role="img" aria-label="merve.karola3vax.com/kart QR kodu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31" shape-rendering="crispEdges"><path fill="#f8f7f3" d="M0 0h31v31H0z"/><path stroke="#1b1d20" d="M1 1.5h7m1 0h2m1 0h1m3 0h2m1 0h3m1 0h7M1 2.5h1m5 0h1m1 0h2m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m3 0h1m2 0h3m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m2 0h1m4 0h2m2 0h1m1 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m2 0h5m4 0h2m2 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m2 0h4m1 0h1m4 0h2m1 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m2 0h4m2 0h1m1 0h2M1 9.5h1m1 0h2m1 0h3m1 0h1m3 0h2m1 0h2m1 0h2m1 0h1m2 0h1m1 0h2M1 10.5h2m1 0h3m2 0h2m1 0h1m3 0h5m1 0h4m3 0h1M1 11.5h4m2 0h2m1 0h4m1 0h2m2 0h1m2 0h1m1 0h2m1 0h2M1 12.5h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h3m3 0h1m1 0h3m4 0h1M3 13.5h2m1 0h2m1 0h1m1 0h1m1 0h1m4 0h1m3 0h1m1 0h1m1 0h2M1 14.5h2m1 0h2m2 0h3m1 0h3m3 0h1m1 0h1m2 0h1m3 0h3M1 15.5h1m2 0h5m1 0h1m1 0h2m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h3M2 16.5h1m3 0h1m1 0h2m1 0h1m1 0h2m1 0h2m3 0h3m1 0h1m2 0h1M1 17.5h9m2 0h2m3 0h1m1 0h4m2 0h2m1 0h1M4 18.5h1m1 0h1m6 0h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h3M1 19.5h1m1 0h3m1 0h5m4 0h1m1 0h1m2 0h5m1 0h1M3 20.5h2m3 0h2m3 0h1m2 0h1m1 0h3m1 0h2m3 0h1M2 21.5h4m1 0h3m2 0h1m1 0h1m3 0h2m1 0h7M9 22.5h1m4 0h2m1 0h3m1 0h1m3 0h5M1 23.5h7m1 0h3m2 0h1m2 0h5m1 0h1m1 0h2m1 0h1M1 24.5h1m5 0h1m1 0h4m4 0h1m1 0h1m1 0h1m3 0h2m1 0h2M1 25.5h1m1 0h3m1 0h1m5 0h1m1 0h2m1 0h2m1 0h5m1 0h2M1 26.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h4m4 0h1m1 0h3m2 0h1M1 27.5h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h1m2 0h3m3 0h1m2 0h1m1 0h1M1 28.5h1m5 0h1m2 0h2m1 0h2m5 0h3m1 0h3m1 0h1M1 29.5h7m1 0h1m2 0h2m2 0h1m2 0h4m2 0h1m2 0h1"/></svg><div><b>Anlatıcı kelimeyi telefondan okur</b><span>Telefonla QR kodu okutun ya da <code>merve.karola3vax.com/kart</code> adresini açın. Kartı telefonda geçin, puanı tahtada gözcü verir.</span></div></div>
 </template>
 
 <template id="tplRoles">
@@ -724,8 +755,9 @@ const IDS = [
 const KEY = 'kadim-tabu-v4';
 const TEAM_NAMES = ['Orhun', 'Kaşgarlı', 'Yunus Emre', 'Dede Korkut', 'Bilge Kağan', 'Tonyukuk', 'Kül Tigin', 'Yesevî'];
 const MIN_TEAMS = 2, MAX_TEAMS = 8;
-const DEFAULTS = { time: 60, rounds: 2, pass: 3, sound: 1 };
+const DEFAULTS = { time: 60, rounds: 2, pass: 3, sound: 1, hide: 0 };
 const FIELDS = [
+  { key: 'hide', label: 'Kelime nerede görünsün?', hint: 'Telefonda: tahtada yalnız süre, puan ve butonlar olur', opts: [[0, 'Tahtada'], [1, 'Telefonda']] },
   { key: 'time', label: 'Tur süresi', hint: 'Bir takımın anlatma süresi', opts: [[45, '45 sn'], [60, '60 sn'], [90, '90 sn'], [120, '2 dk']] },
   { key: 'rounds', label: 'Tur sayısı', hint: 'Her takım kaç kez anlatacak', opts: [[1, '1'], [2, '2'], [3, '3'], [4, '4']] },
   { key: 'pass', label: 'Pas hakkı', hint: 'Bir turda kaç kart geçilebilir', opts: [[0, 'Yok'], [1, '1'], [2, '2'], [3, '3'], [5, '5']] }
@@ -922,6 +954,7 @@ function setTeamCount(n) {
 function renderSettingsSummary() {
   const st = S.settings;
   $('settingsSummary').textContent = '· ' + st.time + ' sn · ' + st.rounds + ' tur · ' + (st.pass ? st.pass + ' pas' : 'pas yok');
+  document.querySelectorAll('[data-qr]').forEach(n => { n.hidden = !st.hide; });
   renderPlan();
 }
 function renderPlan() {
@@ -933,6 +966,7 @@ function renderReady() {
   const t = S.teams[teamNow()];
   renderTracker($('readyTracker'));
   $('tieNote').hidden = S.stage !== 'tie';
+  document.querySelectorAll('[data-qr]').forEach(n => { n.hidden = !S.settings.hide; });
   putBadge($('readyBadge'), t.id, 'lg');
   $('readyTeam').textContent = t.name;
   renderBoard($('readyBoard'), 'Puan durumu', teamNow(), 'Sırada');
@@ -945,6 +979,7 @@ function renderSummary() {
   countUp($('sumPts'), L.pts, n => signed(n) + ' puan');
   $('sumDetail').textContent = L.ok + ' doğru · ' + L.tabu + ' tabu · ' + L.pas + ' pas';
   $('btnNext').textContent = nextLabel();
+  $('sumWords').hidden = !!S.settings.hide; // kelimeler telefondaydı; tahtanın destesi gösterilmez
   const ul = $('sumList');
   ul.textContent = '';
   L.log.forEach((item, n) => {
@@ -1060,6 +1095,10 @@ function renderPlay() {
   $('btnPause').disabled = T.counting;
   $('btnPause').textContent = T.paused ? 'Devam et' : 'Duraklat';
   $('cover').hidden = !T.paused;
+  $('phonePanel').hidden = !S.settings.hide;
+  $('pOk').textContent = T.ok;
+  $('pTabu').textContent = T.tabu;
+  $('pPas').textContent = T.log.filter(x => x.r === 'pas').length;
   $('clockState').textContent = T.paused ? 'durdu' : 'saniye';
 }
 function mark(r) {
@@ -1310,11 +1349,12 @@ function buildFields() {
       seg.append(inp, l);
     });
     row.append(lab, seg);
-    box.append(row);
+    (f.key === 'hide' ? $('modeField') : box).append(row);
   });
 }
 buildFields();
 document.querySelectorAll('[data-howto]').forEach(n => n.append(document.importNode($('tplHowto').content, true)));
+document.querySelectorAll('[data-qr]').forEach(n => n.append(document.importNode($('tplQr').content, true)));
 document.querySelectorAll('[data-roles]').forEach(n => n.append(document.importNode($('tplRoles').content, true)));
 (function () { // Göktürk harfleri şeridi (Unicode Old Turkic bloğu)
   let s = '';
